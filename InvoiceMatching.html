@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <title>Convert JSON Data to HTML Table</title>
+    <style>
+        th, td, p, input {
+            font:14px Verdana;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+        body
+        {
+            margin: 2%;
+        }
+        /* fieldset
+        {
+            max-width: max-content;
+        } */
+        fieldset{
+  border: 1px solid rgb(255,232,57);
+  width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+form
+{
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+
+        <fieldset>
+                <legend><input type="text" id="po_order_no" placeholder="please enter PO Number"> <input type="button" onclick="CreateTableFromJSON()" value="Process Invoice" /></legend>
+                
+                <p id="showData"></p>
+              </fieldset>
+
+
+    <!-- <div class="center">
+            <input type="text" id="po_order_no" placeholder="please enter PO Number">
+            <input type="button" onclick="CreateTableFromJSON()" value="Process Invoice" />
+            <p id="showData"></p>
+    </div> -->
+    
+</body>
+
+<script>
+    function CreateTableFromJSON() {
+        var book_id = document.getElementById("po_order_no").value.trim()
+        // alert(document.getElementById("po_order_no").value)
+        var myBooks = [
+            {
+                "Book ID": "1",
+                "Book Name": "Computer Architecture",
+                "Category": "Computers",
+                "Price": "125.60"
+            },
+            {
+                "Book ID": "2",
+                "Book Name": "Asp.Net 4 Blue Book",
+                "Category": "Programming",
+                "Price": "56.00"
+            },
+            {
+                "Book ID": "3",
+                "Book Name": "Popular Science",
+                "Category": "Science",
+                "Price": "210.40"
+            }
+        ]
+
+        // EXTRACT VALUE FOR HTML HEADER. 
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        if (book_id !== "") {
+            for (var i = 0; i < myBooks.length; i++) {
+
+                for (var key in myBooks[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+        }
+        else {
+            alert("please enter po number");
+        }
+
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < myBooks.length; i++) {
+            if (myBooks[i]["Book ID"] === book_id) {
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col.length; j++) {
+
+                    console.log(myBooks[i]);
+                    console.log("------------");
+
+                    var tabCell = tr.insertCell(-1);
+                    tabCell.innerHTML = myBooks[i][col[j]];
+                }
+
+            }
+
+        }
+        // alert(table.rows.length)
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        if (table.rows.length === 1) {
+            divContainer.innerHTML = "<b> No Data Exist</b>";
+        }
+        else {
+            divContainer.appendChild(table);
+        }
+
+    }
+</script>
+
+</html>
